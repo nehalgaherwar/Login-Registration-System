@@ -1,0 +1,58 @@
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+function showLogin() {
+    document.getElementById("registerBox").classList.add("hidden");
+    document.getElementById("loginBox").classList.remove("hidden");
+}
+
+function showRegister() {
+    document.getElementById("loginBox").classList.add("hidden");
+    document.getElementById("registerBox").classList.remove("hidden");
+}
+
+function register() {
+    let name = document.getElementById("regName").value;
+    let email = document.getElementById("regEmail").value;
+    let password = document.getElementById("regPassword").value;
+
+    if(name === "" || email === "" || password === "") {
+        alert("All fields are required!");
+        return;
+    }
+
+    users.push({name, email, password});
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("Registration Successful!");
+    showLogin();
+}
+
+function login() {
+    let email = document.getElementById("loginEmail").value;
+    let password = document.getElementById("loginPassword").value;
+
+    let user = users.find(u => u.email === email && u.password === password);
+
+    if(user) {
+        alert("Login Successful! Welcome " + user.name);
+    } else {
+        alert("Invalid Credentials!");
+    }
+}
+
+document.getElementById("regPassword").addEventListener("input", function() {
+    let pass = this.value;
+    let strength = document.getElementById("strength");
+
+    if(pass.length < 6) {
+        strength.innerText = "Weak Password";
+        strength.style.color = "red";
+    }
+    else if(pass.match(/[A-Z]/) && pass.match(/[0-9]/)) {
+        strength.innerText = "Strong Password";
+        strength.style.color = "green";
+    }
+    else {
+        strength.innerText = "Medium Password";
+        strength.style.color = "orange";
+    }
+});
